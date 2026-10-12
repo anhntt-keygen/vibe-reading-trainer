@@ -1,0 +1,28 @@
+{
+  "name": "vibe-reading-trainer",
+  "version": "1.0.0",
+  "description": "Interactive reading trainer application with speech recognition and evaluation",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "playwright test"
+  },
+  "keywords": [
+    "reading",
+    "speech-recognition",
+    "education",
+    "kids",
+    "tts"
+  ],
+  "author": "Vibecode Senior Full-Stack Developer",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.42.1"
+  }
+}
+```
+
+---
