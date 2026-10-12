@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vibe Reading Trainer - Bé Tập Đọc Thông Minh</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="logo-area">
+        <span class="logo-icon">🎈</span>
+        <h1>Vibe Reading</h1>
+      </div>
+      <nav class="nav-tabs">
+        <button class="nav-btn active" data-target="practice-section">📖 Luyện Đọc</button>
+        <button class="nav-btn" data-target="stats-section">🏆 Thành Tích</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="app-container">
+    <!-- SECTION 1: PRACTICE -->
+    <section id="practice-section" class="tab-content active">
+      <div class="grid-layout">
+        <!-- Sidebar: Passage Selector -->
+        <aside class="sidebar-card">
+          <h2 class="section-title">🌟 Chọn Bài Đọc</h2>
+          
+          <div class="filter-group">
+            <label for="level-filter">Cấp độ:</label>
+            <select id="level-filter" class="custom-select">
+              <option value="all">Tất cả cấp độ</option>
+              <option value="easy">Dễ (Câu ngắn)</option>
+              <option value="medium">Trung bình</option>
+              <option value="hard">Khó (Đoạn văn)</option>
+            </select>
+          </div>
+
+          <div id="passage-list" class="passage-list">
+            <!-- Dynamic passage items loaded here -->
+          </div>
+        </aside>
+
+        <!-- Main Workspace -->
+        <div class="workspace-card">
+          <!-- Passage Header -->
+          <div class="passage-header">
+            <span id="passage-badge" class="badge badge-easy">Dễ</span>
+            <h2 id="passage-title">Đang tải bài đọc...</h2>
+          </div>
+
+          <!-- Reading Area -->
+          <div class="reading-box-wrapper">
+            <div id="reading-box" class="reading-box">
+              <p class="placeholder-text">Vui lòng chọn một bài đọc ở danh sách bên cạnh để bắt đầu!</p>
+            </div>
+          </div>
+
+          <!-- Interactive Controls -->
+          <div class="controls-panel">
+            <button id="btn-tts" class="btn btn-secondary" title="Nghe máy đọc mẫu">
+              <span class="btn-icon">🔊</span> Nghe Mẫu
+            </button>
+
+            <button id="btn-record" class="btn btn-primary" title="Bắt đầu đọc to">
+              <span class="btn-icon">🎙️</span> <span id="record-text">Bắt đầu đọc</span>
+            </button>
+
+            <button id="btn-reset" class="btn btn-outline">
+              🔄 Đọc lại
+            </button>
+          </div>
+
+          <!-- Speech Recognition Status / Fallback Mode -->
+          <div id="status-banner" class="status-banner hidden">
+            <span class="status-dot"></span>
+            <span id="status-text">Đang lắng nghe giọng đọc của bé...</span>
+          </div>
+
+          <!-- Fallback Fill-in-the-blank Mode Container -->
+          <div id="fallback-container" class="fallback-container hidden">
+            <div class="fallback-header">
+              ⚠️ <strong>Chế độ dự phòng:</strong> Trình duyệt không hỗ trợ ghi âm. Hãy điền các từ còn thiếu vào ô trống dưới đây!
+            </div>
+            <div id="fallback-game" class="fallback-game">
+              <!-- Dynamic fill-in-the-blank inputs -->
+            </div>
+            <button id="btn-submit-fallback" class="btn btn-success">Nộp bài kiểm tra</button>
+          </div>
+
+          <!-- Evaluation Result Card -->
+          <div id="result-card" class="result-card hidden">
+            <div class="result-header">
+              <h3>🎉 Kết Quả Luyện Tập</h3>
+            </div>
+            <div class="result-body">
+              <div class="score-circle">
+                <span id="score-value">0</span><span class="percent">%</span>
+              </div>
+              <div class="result-details">
+                <p><strong>Đánh giá:</strong> <span id="evaluation-feedback">Tuyệt vời!</span></p>
+                <p><strong>Số từ đọc đúng:</strong> <span id="correct-count">0/0</span></p>
+                <p id="mispronounced-wrapper"><strong>Từ cần luyện thêm:</strong> <span id="mispronounced-words" class="bad-words">Không có</span></p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: STATS & PROGRESS -->
+    <section id="stats-section" class="tab-content">
+      <div class="stats-grid">
+        <!-- Left: Overview Cards -->
+        <div class="stats-sidebar">
+          <div class="card stat-summary-card">
+            <h3>Tổng quan học tập</h3>
+            <div class="stat-row">
+              <span class="stat-label">Số bài đã đọc:</span>
+              <span id="stat-total-reads" class="stat-val">0</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Điểm trung bình:</span>
+              <span id="stat-avg-score" class="stat-val">0%</span>
+            </div>
+            <button id="btn-clear-history" class="btn btn-danger-outline">Xóa lịch sử học</button>
+          </div>
+
+          <div class="card weak-words-card">
+            <h3>⚠️ Từ vựng cần luyện thêm</h3>
+            <p class="sub-desc">Các từ bé thường phát âm chưa chính xác:</p>
+            <div id="weak-words-list" class="weak-words-list">
+              <span class="empty-msg">Chưa có dữ liệu từ vựng yếu.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Progress Chart -->
+        <div class="card chart-card">
+          <h3>📈 Biểu đồ tiến trình học tập</h3>
+          <p class="sub-desc">Điểm số của các lượt đọc gần nhất</p>
+          <div class="chart-container">
+            <svg id="progress-chart" viewBox="0 0 500 250" class="svg-chart">
+              <!-- Grid lines -->
+              <line x1="50" y1="50" x2="480" y2="50" stroke="#eef2f6" stroke-width="1" />
+              <line x1="50" y1="100" x2="480" y2="100" stroke="#eef2f6" stroke-width="1" />
+              <line x1="50" y1="150" x2="480" y2="150" stroke="#eef2f6" stroke-width="1" />
+              <line x1="50" y1="200" x2="480" y2="200" stroke="#cbd5e1" stroke-width="2" />
+              
+              <!-- Y-axis labels -->
+              <text x="15" y="55" class="chart-text">100%</text>
+              <text x="15" y="105" class="chart-text">50%</text>
+              <text x="15" y="155" class="chart-text">25%</text>
+              <text x="20" y="205" class="chart-text">0%</text>
+
+              <!-- Dynamic polyline and points will be injected here -->
+              <g id="chart-data-group"></g>
+            </svg>
+          </div>
+          <div class="backup-restore-panel">
+            <h4>Backup & Restore</h4>
+            <div class="backup-buttons">
+              <button id="btn-export-data" class="btn btn-small">📥 Xuất dữ liệu (JSON)</button>
+              <label for="import-data-file" class="btn btn-small btn-outline">📤 Nhập dữ liệu</label>
+              <input type="file" id="import-data-file" accept=".json" style="display: none;">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <p>© 2024 Vibe Reading Trainer. Phát triển bởi Vibecode Senior Full-Stack Developer.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
+```
+
+---
